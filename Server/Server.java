@@ -11,11 +11,17 @@ public class Server {
 	private ArrayList<ServerConnection> clients;
 	private ServerSocket serverSocket;
 	
+	public int playerWidth = 30;
+	public int playerHeight = 30;
+	
 	private JFrame frame;
 	private JPanel panel;
+	public World world;
+	public ArrayList<Player> players;
 
 	public Server(){
 		//Init UI
+		players=new ArrayList<Player>();
 		clients = new ArrayList<ServerConnection>();
 		frame = new JFrame("Server");
 		frame.setVisible(true);

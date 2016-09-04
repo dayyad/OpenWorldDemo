@@ -41,7 +41,7 @@ public class Client {
 		toY=10;
 		connected = false;
 		players = new ArrayList<Player>();
-		player = new Player((int)(windowWidth/2),(int)(windowHeight/2),playerWidth,playerHeight);
+		player = new Player((int)(windowWidth/2),(int)(windowHeight/2),playerWidth,playerHeight,(int)0);
 		players.add(player);
 		status = "Not connected.";
 		advice = "Press any key to connect to server.";

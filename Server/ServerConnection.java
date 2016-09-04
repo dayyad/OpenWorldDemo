@@ -9,10 +9,13 @@ public class ServerConnection {
 	private Listener listener;
 	private Scanner scanner;
 	private PrintWriter writer;
+	public final int connectionId;
+	private static int lastId=0;
 
 	public ServerConnection(Server server,Socket socket){
 		this.server=server;
 		this.socket=socket;
+		this.connectionId=lastId++;
 
 		listener=new Listener();
 		listener.start();
@@ -31,12 +34,18 @@ public class ServerConnection {
 	}
 	
 	public void update(){
-		
+		for(Player player : server.players){
+			String playerPacket = "setPlayer" + " " + player.getX() + " " + player.getY()
+			+ " " + player.getWidth() + " " + player.getHeight() + " " + player.getId();
+			send(playerPacket);
+		}
 	}
 	
 	//For setting up a player that has just connected.
 	public void initPlayer(){
-		
+		send("setConnectionId " + connectionId);
+		server.players.add(new Player(0,0,server.playerWidth,server.playerHeight,connectionId));
+		server.updateClients();
 	}
 
 	//ServerListener

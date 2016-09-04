@@ -2,17 +2,18 @@
 public class Player {
 	private int x;
 	private int y;
+	private final int id;
 	
 	private int width;
 	private int height;
-	private final int id;
 	
 	public Player(int x,int y,int width, int height,int id){
+		this.id = id;
+		
 		this.x=x;
 		this.y=y;
 		this.width=width;
 		this.height=height;
-		this.id = id;
 	}
 	
 	public int getId(){
