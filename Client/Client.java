@@ -6,6 +6,7 @@ import java.awt.event.KeyListener;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -15,11 +16,22 @@ public class Client {
 	private Graphics g;
 	private JPanel p;
 	private JFrame frame;
-	private boolean gameStarted;
+	private boolean connected;
 	public double x;
 	public double y;
 	public int toX;
 	public int toY;
+	
+	private int windowWidth = 500;
+	private int windowHeight =500;
+	private int playerWidth = 30;
+	private int playerHeight = 30;
+	
+	public String status;
+	public String advice;
+	public Player player;
+	public ArrayList<Player> players;
+	public World world;
 	private ClientConnection connection;
 
 	public Client(){
@@ -27,13 +39,18 @@ public class Client {
 		y=0;
 		toX=10;
 		toY=10;
-		gameStarted=false;
+		connected = false;
+		players = new ArrayList<Player>();
+		player = new Player((int)(windowWidth/2),(int)(windowHeight/2),playerWidth,playerHeight);
+		players.add(player);
+		status = "Not connected.";
+		advice = "Press any key to connect to server.";
 
 		//Creates the jframe/
 		frame = new JFrame("Client");
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setSize(500, 500);
+		frame.setSize(windowWidth, windowHeight);
 
 		this.p = new Panel(this);
 
@@ -50,24 +67,23 @@ public class Client {
 			public void keyPressed(KeyEvent e) {
 				// TODO Auto-generated method stub
 				System.out.println(e.getKeyChar());
-				if(!gameStarted){
-					gameStarted=true;
+				if(!connected){
+					connected=true;
+					status = "Connected.";
+					advice = "WASD to move.";
 					openConnection();
-
+				} else {
+					connection.send(Character.toString(e.getKeyChar()));
 				}
-				p.repaint();
+				draw();
 			}
 
 			@Override
 			public void keyTyped(KeyEvent e) {
-				// TODO Auto-generated method stub
-				//System.out.println(e.getKeyChar());
 			}
 
 			@Override
 			public void keyReleased(KeyEvent e) {
-				// TODO Auto-generated method stub
-				//System.out.println(e.getKeyChar());
 			}
 		});
 
@@ -96,12 +112,10 @@ public class Client {
 		}
 
 	}
-
-	private void doJoin(){
-		p.removeAll();
+	
+	public void draw(){
 		p.repaint();
 	}
-
 
 	public static void main(String[] args) {
 		new Client();

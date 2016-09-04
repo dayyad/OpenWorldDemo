@@ -18,13 +18,12 @@ public class ClientConnection {
 		listener.start();
 	}
 
-	public void send(){
+	public void send(String string){
 		try {
 			writer=new PrintWriter(socket.getOutputStream());
-
-			writer.println("TESTING TESTING TESTING");
+			writer.println(string + "\n");
+			writer.flush();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -52,5 +51,6 @@ public class ClientConnection {
 
 	private void processLine(String line){
 		System.out.println(line);
+		client.draw();
 	}
 }
