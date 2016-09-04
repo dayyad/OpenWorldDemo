@@ -1,8 +1,9 @@
 import java.awt.Graphics;
 
 //TODO 
-//Make the chucnks have coordinates and not just ids.
-//make the client panel display the coordinates of the player in the world.
+//--Make the chucnks have coordinates and not just ids.
+//--make the client panel display the coordinates of the player in the world.
+//--Game still displays connected status when not connected properly (server is off)
 
 //Player joins server.
 //Server tells client what chunck their player is in. 
@@ -37,11 +38,12 @@ public class Client {
 	public int toX;
 	public int toY;
 	
-	private int windowWidth = 500;
-	private int windowHeight =500;
+	private int windowWidth = 1000;
+	private int windowHeight =700;
 	public int playerWidth = 30;
 	public int playerHeight = 30;
 	
+	public int[] chunckCoordinates= new int[2];
 	public String status;
 	public String advice;
 	public Player player;

@@ -93,6 +93,9 @@ public class ClientConnection {
 					if(newPlayer.getId()==connectionId)
 						client.player=newPlayer;
 				}
+			} else if(nextPack.equals("setChunckCoordinates")){
+				client.chunckCoordinates[0]=lineScanner.nextInt();
+				client.chunckCoordinates[1]=lineScanner.nextInt();
 			}
 				
 		}

@@ -18,10 +18,12 @@ public class Panel extends JPanel {
 		g.setColor(Color.red);
 		g.drawString("Status: " + client.status, 0, 20);
 		g.drawString(client.players.size() + " Players online.", 150, 20);
-		if(client.connection!=null)
+		if(client.connection!=null){
 			g.drawString("Connection ID: "+ client.connection.connectionId, 250, 20);
-		if(client.player!=null)
+		} if(client.player!=null){
 			g.drawString("Currently in chunck: "+client.player.getChunckId(), 350, 20);
+			g.drawString("Coordinates x: " + client.chunckCoordinates[0] + " y: " + client.chunckCoordinates[1], 350, 40);
+		}
 		g.setColor(Color.green);
 		g.drawString(client.advice, 0, 40);
 		

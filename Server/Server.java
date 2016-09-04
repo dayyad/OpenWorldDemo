@@ -30,7 +30,7 @@ public class Server {
 		players=new ArrayList<Player>();
 		chunckBoard = new Chunck[mapWidth][mapHeight];
 		this.fillBoard();
-		spawnChunck=findChunckById(0);
+		spawnChunck=getChunckById(0);
 		clients = new ArrayList<ServerConnection>();
 		frame = new JFrame("Server");
 		frame.setVisible(true);
@@ -77,7 +77,7 @@ public class Server {
 		return null;
 	}
 	
-	public Chunck findChunckById(int id){
+	public Chunck getChunckById(int id){
 		for(int x =0;x<chunckBoard.length;x++){
 			for(int y=0;y<chunckBoard[0].length;y++){
 				if(chunckBoard[x][y].getId()==id){
@@ -92,7 +92,7 @@ public class Server {
 	public void fillBoard(){
 		for (int x= 0;x<chunckBoard.length;x++){
 			for(int y=0;y<chunckBoard[0].length;y++){
-				chunckBoard[x][y]=new Chunck();
+				chunckBoard[x][y]=new Chunck(x,y);
 			}
 		}
 	}

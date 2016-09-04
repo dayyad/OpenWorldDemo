@@ -34,7 +34,10 @@ public class ServerConnection {
 	}
 	
 	public void update(){
+		//Sends player their chunck coordinates.
+		send("setChunckCoordinates" + " " + server.getChunckById(server.getPlayerById(connectionId).getChunckId()).getxPos() + " " + server.getChunckById(server.getPlayerById(connectionId).getChunckId()).getyPos());
 		for(Player player : server.players){
+			//Sends information about all the players
 			String playerPacket = "setPlayer" + " " + player.getX() + " " + player.getY()
 			+ " " + player.getWidth() + " " + player.getHeight() + " " + player.getId() + " " + player.getChunckId();
 			send(playerPacket);
