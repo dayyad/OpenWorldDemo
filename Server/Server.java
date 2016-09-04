@@ -17,8 +17,8 @@ public class Server {
 	public int moveSpeed = 20;
 	private int mapWidth = 5;
 	private int mapHeight = 5;
-	public int chunckWidth=1000;
-	public int chunckHeight=700;
+	public int chunckWidth=450;
+	public int chunckHeight=450;
 	
 	private JFrame frame;
 	private JPanel panel;

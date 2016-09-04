@@ -47,7 +47,7 @@ public class ServerConnection {
 	//For setting up a player that has just connected.
 	public void initPlayer(){
 		send("setConnectionId " + connectionId);
-		server.players.add(new Player(0,0,server.playerWidth,server.playerHeight,connectionId,server.spawnChunck.getId()));
+		server.players.add(new Player(60,60,server.playerWidth,server.playerHeight,connectionId,server.spawnChunck.getId()));
 		server.updateClients();
 	}
 
@@ -102,26 +102,34 @@ public class ServerConnection {
 		int chunckX = server.getChunckById(player.getChunckId()).getxPos();
 		int chunckY = server.getChunckById(player.getChunckId()).getyPos();
 		
-		if (x>server.chunckWidth){
+		if (x>server.chunckWidth && chunckX<server.chunckBoard.length-1){
 			//To right of chunck
-			if(server.chunckBoard[chunckX+1][chunckY]!=null){
+				System.out.println("Ran into wall right");
 				player.setChunckId(server.chunckBoard[chunckX+1][chunckY].getId());
-			}
-		} else if(x<0){
+		} else{
+			System.out.println("moved player left");
+			player.setX(server.chunckWidth-server.playerWidth);
+		} if(x<0 && chunckX>0){
 			//To left of chunck
-			if(server.chunckBoard[chunckX-1][chunckY]!=null){
+			    System.out.println("Ran into wall left");
 				player.setChunckId(server.chunckBoard[chunckX-1][chunckY].getId());
-			}
-		} else if(y>server.chunckHeight){
+		} else{
+			System.out.println("moved player right");
+			player.setX(0+server.playerHeight);
+		} if(y>server.chunckHeight && chunckY < server.chunckBoard[0].length-1){
 			//Bellow chunck
-			if(server.chunckBoard[chunckX][chunckY+1]!=null){
 				player.setChunckId(server.chunckBoard[chunckX][chunckY+1].getId());
-			}
-		} else if(y<0){
+				System.out.println("Ran into wall down");
+		} else{
+			System.out.println("moved player up");
+			player.setY(server.chunckHeight-server.playerHeight);
+		} if(y<0 && chunckY>0){
 			//Above chunck
-			if(server.chunckBoard[chunckX][chunckY-1]!=null){
 				player.setChunckId(server.chunckBoard[chunckX][chunckY-1].getId());
-			}
+				System.out.println("Ran into wall up");
+		} else {
+			System.out.println("moved player down");
+			player.setY(0+server.playerHeight);
 		}
 		
 		server.updateClients();

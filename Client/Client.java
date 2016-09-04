@@ -38,8 +38,8 @@ public class Client {
 	public int toX;
 	public int toY;
 	
-	private int windowWidth = 1000;
-	private int windowHeight =700;
+	private int windowWidth = 450;
+	private int windowHeight =450;
 	public int playerWidth = 30;
 	public int playerHeight = 30;
 	
