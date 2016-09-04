@@ -96,7 +96,35 @@ public class ServerConnection {
 	//to a different chunck.
 	
 	private void checkTravel(){
+		Player player = server.getPlayerById(connectionId);
+		int x = player.getX();
+		int y = player.getY();
+		int chunckX = server.getChunckById(player.getChunckId()).getxPos();
+		int chunckY = server.getChunckById(player.getChunckId()).getyPos();
 		
+		if (x>server.chunckWidth){
+			//To right of chunck
+			if(server.chunckBoard[chunckX+1][chunckY]!=null){
+				player.setChunckId(server.chunckBoard[chunckX+1][chunckY].getId());
+			}
+		} else if(x<0){
+			//To left of chunck
+			if(server.chunckBoard[chunckX-1][chunckY]!=null){
+				player.setChunckId(server.chunckBoard[chunckX-1][chunckY].getId());
+			}
+		} else if(y>server.chunckHeight){
+			//Bellow chunck
+			if(server.chunckBoard[chunckX][chunckY+1]!=null){
+				player.setChunckId(server.chunckBoard[chunckX][chunckY+1].getId());
+			}
+		} else if(y<0){
+			//Above chunck
+			if(server.chunckBoard[chunckX][chunckY-1]!=null){
+				player.setChunckId(server.chunckBoard[chunckX][chunckY-1].getId());
+			}
+		}
+		
+		server.updateClients();
 	}
 
 }
