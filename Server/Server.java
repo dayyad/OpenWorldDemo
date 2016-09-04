@@ -43,20 +43,21 @@ public class Server {
 //		panel.requestFocus();
 		
 		//Listens for key pushes
-		panel.addKeyListener(new KeyListener(){
-			@Override
-			public void keyPressed(KeyEvent e) {
-				for(ServerConnection client : clients){
-					client.send(Character.toString(e.getKeyChar()));
-				}
-			}
-			@Override
-			public void keyReleased(KeyEvent e) {
-			}
-			@Override
-			public void keyTyped(KeyEvent e) {
-			}
-		});
+		
+//		panel.addKeyListener(new KeyListener(){
+//			@Override
+//			public void keyPressed(KeyEvent e) {
+//				for(ServerConnection client : clients){
+//					client.send(Character.toString(e.getKeyChar()));
+//				}
+//			}
+//			@Override
+//			public void keyReleased(KeyEvent e) {
+//			}
+//			@Override
+//			public void keyTyped(KeyEvent e) {
+//			}
+//		});
 		
 		//Attempt to start serversocket
 		try {

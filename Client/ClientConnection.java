@@ -96,6 +96,8 @@ public class ClientConnection {
 			} else if(nextPack.equals("setChunckCoordinates")){
 				client.chunckCoordinates[0]=lineScanner.nextInt();
 				client.chunckCoordinates[1]=lineScanner.nextInt();
+			} else if(nextPack.equals("setMoveSpeed")){
+				client.moveSpeed=lineScanner.nextInt();
 			}
 				
 		}

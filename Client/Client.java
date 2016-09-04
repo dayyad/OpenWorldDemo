@@ -1,8 +1,7 @@
 import java.awt.Graphics;
 
 //TODO 
-//--Make the chucnks have coordinates and not just ids.
-//--make the client panel display the coordinates of the player in the world.
+//--Make client side movement animation to counter slow server connection.
 //--Game still displays connected status when not connected properly (server is off)
 
 //Player joins server.
@@ -44,6 +43,8 @@ public class Client {
 	public int playerWidth = 30;
 	public int playerHeight = 30;
 	
+	//Imported from server.
+	public int moveSpeed = 0;
 	public int[] chunckCoordinates= new int[2];
 	public String status;
 	public String advice;
@@ -90,6 +91,19 @@ public class Client {
 					openConnection();
 				} else {
 					connection.send(Character.toString(e.getKeyChar()));
+				}
+				
+				//If client has received move speed from the server, let the client draw moves instantly.
+				if(moveSpeed!=0){
+					if (Character.toString(e.getKeyChar()).equals("w")){
+						player.setY(player.getY()-moveSpeed);
+					} if (Character.toString(e.getKeyChar()).equals("a")){
+						player.setX(player.getX()-moveSpeed);
+					} if (Character.toString(e.getKeyChar()).equals("s")){
+						player.setY(player.getY()+moveSpeed);
+					} if (Character.toString(e.getKeyChar()).equals("d")){
+						player.setX(player.getX()+moveSpeed);
+					}
 				}
 				draw();
 			}

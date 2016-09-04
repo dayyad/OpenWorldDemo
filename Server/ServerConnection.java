@@ -47,6 +47,7 @@ public class ServerConnection {
 	//For setting up a player that has just connected.
 	public void initPlayer(){
 		send("setConnectionId " + connectionId);
+		send("setMoveSpeed " + server.moveSpeed);
 		server.players.add(new Player(60,60,server.playerWidth,server.playerHeight,connectionId,server.spawnChunck.getId()));
 		server.updateClients();
 	}
