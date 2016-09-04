@@ -36,7 +36,7 @@ public class Client {
 	public double y;
 	public int toX;
 	public int toY;
-	private String serverIp = "localhost";
+	private String serverIp = "130.195.7.68";
 
 	private int windowWidth = 550;
 	private int windowHeight =550;
