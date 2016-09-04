@@ -74,9 +74,6 @@ public class ClientConnection {
 				
 				boolean found = false;
 				for(Player player : client.players){
-					//If the ids match, make the clients player equal to this player.
-					if(player.getId()==connectionId)
-						client.player=player;
 					if(player.getId()==id)
 						player.setX(x);
 						player.setY(y);
@@ -85,7 +82,11 @@ public class ClientConnection {
 						found=true;
 				}
 				if(!found){
-					client.players.add(new Player(x,y,width,height,id));
+					Player newPlayer=new Player(x,y,width,height,id);
+					client.players.add(newPlayer);
+					//If the newly created player has same id as the connection then set the player to be our player.
+					if(newPlayer.getId()==connectionId)
+						client.player=newPlayer;
 				}
 			}
 				

@@ -24,8 +24,8 @@ public class Client {
 	
 	private int windowWidth = 500;
 	private int windowHeight =500;
-	private int playerWidth = 30;
-	private int playerHeight = 30;
+	public int playerWidth = 30;
+	public int playerHeight = 30;
 	
 	public String status;
 	public String advice;
@@ -41,8 +41,6 @@ public class Client {
 		toY=10;
 		connected = false;
 		players = new ArrayList<Player>();
-		player = new Player((int)(windowWidth/2),(int)(windowHeight/2),playerWidth,playerHeight,(int)0);
-		players.add(player);
 		status = "Not connected.";
 		advice = "Press any key to connect to server.";
 
