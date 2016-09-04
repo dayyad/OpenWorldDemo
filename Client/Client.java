@@ -37,9 +37,10 @@ public class Client {
 	public double y;
 	public int toX;
 	public int toY;
+	private String serverIp = "45.55.227.136";
 	
-	private int windowWidth = 450;
-	private int windowHeight =450;
+	private int windowWidth = 550;
+	private int windowHeight =550;
 	public int playerWidth = 30;
 	public int playerHeight = 30;
 	
@@ -118,7 +119,7 @@ public class Client {
 
 		Socket socket;
 		try {
-			socket = new Socket("localhost",2222);
+			socket = new Socket(serverIp,2222);
 			connection = new ClientConnection(this,socket);
 		} catch (UnknownHostException e) {
 			e.printStackTrace();

@@ -106,28 +106,32 @@ public class ServerConnection {
 			//To right of chunck
 				System.out.println("Ran into wall right");
 				player.setChunckId(server.chunckBoard[chunckX+1][chunckY].getId());
-		} else{
+				player.setX(0+server.playerWidth);
+		} else if(x>server.chunckWidth){
 			System.out.println("moved player left");
 			player.setX(server.chunckWidth-server.playerWidth);
 		} if(x<0 && chunckX>0){
 			//To left of chunck
 			    System.out.println("Ran into wall left");
 				player.setChunckId(server.chunckBoard[chunckX-1][chunckY].getId());
-		} else{
+				player.setX(server.chunckWidth-server.playerWidth);
+		} else if(x<0){
 			System.out.println("moved player right");
 			player.setX(0+server.playerHeight);
 		} if(y>server.chunckHeight && chunckY < server.chunckBoard[0].length-1){
 			//Bellow chunck
 				player.setChunckId(server.chunckBoard[chunckX][chunckY+1].getId());
+				player.setY(0+server.playerHeight);
 				System.out.println("Ran into wall down");
-		} else{
+		} else if(y>server.chunckHeight){
 			System.out.println("moved player up");
 			player.setY(server.chunckHeight-server.playerHeight);
 		} if(y<0 && chunckY>0){
 			//Above chunck
 				player.setChunckId(server.chunckBoard[chunckX][chunckY-1].getId());
+				player.setY(server.chunckHeight-server.playerHeight);
 				System.out.println("Ran into wall up");
-		} else {
+		} else if(y<0){
 			System.out.println("moved player down");
 			player.setY(0+server.playerHeight);
 		}

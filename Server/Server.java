@@ -34,13 +34,13 @@ public class Server {
 		this.fillBoard();
 		spawnChunck=getChunckById(0);
 		clients = new ArrayList<ServerConnection>();
-		frame = new JFrame("Server");
-		frame.setVisible(true);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setSize(300, 300);
-		panel = new JPanel();
-		frame.add(panel);
-		panel.requestFocus();
+//		frame = new JFrame("Server");
+//		frame.setVisible(true);
+//		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//		frame.setSize(300, 300);
+//		panel = new JPanel();
+//		frame.add(panel);
+//		panel.requestFocus();
 		
 		//Listens for key pushes
 		panel.addKeyListener(new KeyListener(){
