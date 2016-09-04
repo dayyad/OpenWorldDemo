@@ -69,7 +69,24 @@ public class ServerConnection {
 	}
 
 	private void processLine(String line){
-		System.out.println(line);
+		Player player = server.getPlayerById(connectionId);
+		if(player!=null){
+			if(line.equals("w")){
+				player.setY(player.getY()-server.moveSpeed);
+			}
+			if(line.equals("a")){
+				player.setX(player.getX()-server.moveSpeed);
+			}
+			if(line.equals("s")){
+				player.setY(player.getY()+server.moveSpeed);
+			}
+			if(line.equals("d")){
+				player.setX(player.getX()+server.moveSpeed);
+			}
+		}
+		
+		server.updateClients();
+		System.out.println("Server recieved: " +line);
 	}
 
 }

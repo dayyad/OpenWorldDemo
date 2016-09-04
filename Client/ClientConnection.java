@@ -14,6 +14,7 @@ public class ClientConnection {
 	public ClientConnection(Client client,Socket socket){
 		this.client=client;
 		this.socket=socket;
+		this.connectionId=0;
 
 		listener=new Listener();
 		listener.start();
@@ -24,10 +25,10 @@ public class ClientConnection {
 			writer=new PrintWriter(socket.getOutputStream());
 			writer.println(string + "\n");
 			writer.flush();
+			System.out.println("Server sent to user: " + string);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
 	}
 
 	//ServerListener
@@ -57,10 +58,12 @@ public class ClientConnection {
 			String nextPack = lineScanner.next();
 			
 			//Scans for connection id, setting current connection id to this.
-			if(nextPack.equals("setConnectionId"))
-				if(lineScanner.hasNextInt())
-					this.connectionId=scanner.nextInt();
-			
+			if(nextPack.equals("setConnectionId")){
+				if(lineScanner.hasNextInt()){
+					this.connectionId=lineScanner.nextInt();
+					System.out.println("Client: Successfuly set connectionId to: " + connectionId);
+				}
+			}
 			//Scans player packets and updates the local player data.
 			if(nextPack.equals("setPlayer")){
 				int x = lineScanner.nextInt();

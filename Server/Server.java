@@ -13,6 +13,7 @@ public class Server {
 	
 	public int playerWidth = 30;
 	public int playerHeight = 30;
+	public int moveSpeed = 20;
 	
 	private JFrame frame;
 	private JPanel panel;
@@ -59,6 +60,15 @@ public class Server {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	//Search for a player by id, if not found return null
+	public Player getPlayerById(int id){
+		for(Player player : players){
+			if(player.getId()==id)
+				return player;
+		}
+		return null;
 	}
 	
 	//Send all the clients current game state.

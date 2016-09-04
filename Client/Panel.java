@@ -17,6 +17,7 @@ public class Panel extends JPanel {
 		//Draws status and advice bars.
 		g.setColor(Color.red);
 		g.drawString("Status: " + client.status, 0, 20);
+		g.drawString(client.players.size() + " Players online.", 150, 20);
 		g.setColor(Color.green);
 		g.drawString(client.advice, 0, 40);
 		
@@ -28,7 +29,7 @@ public class Panel extends JPanel {
 				g.setColor(Color.red);
 			else 
 				g.setColor(Color.green);
-			g.fillOval(player.getX()+(int)(player.getWidth()/2), player.getX()+(int)(player.getHeight()/2), player.getWidth(), player.getHeight());
+			g.fillOval(player.getX(), player.getY(), player.getWidth(), player.getHeight());
 		}
 		
 		//TODO draw world
