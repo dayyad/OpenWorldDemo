@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.IOException;
@@ -54,12 +55,20 @@ public class Server {
 		try {
 			serverSocket = new ServerSocket(2222);
 			while(true){
+				draw();
 				clients.add(new ServerConnection(this,serverSocket.accept()));
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	public void draw(){
+		panel.getGraphics().setColor(Color.white);
+		panel.getGraphics().fillRect(0, 0, panel.getWidth(), panel.getHeight());
+		panel.getGraphics().setColor(Color.red);
+		panel.getGraphics().drawString("Clients connected: " + clients.size(), 20, 20);
 	}
 	
 	//Search for a player by id, if not found return null

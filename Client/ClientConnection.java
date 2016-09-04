@@ -74,16 +74,19 @@ public class ClientConnection {
 				
 				boolean found = false;
 				for(Player player : client.players){
-					if(player.getId()==id)
+					if(player.getId()==id){
 						player.setX(x);
 						player.setY(y);
 						player.setWidth(width);
 						player.setHeight(height);
 						found=true;
+						System.out.println("Client: found player, dont have to add");
+					}
 				}
 				if(!found){
 					Player newPlayer=new Player(x,y,width,height,id);
 					client.players.add(newPlayer);
+					System.out.println("Client: added new player.");
 					//If the newly created player has same id as the connection then set the player to be our player.
 					if(newPlayer.getId()==connectionId)
 						client.player=newPlayer;
