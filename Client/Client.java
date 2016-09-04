@@ -4,6 +4,8 @@ import java.awt.Graphics;
 //--Make client side movement animation to counter slow server connection.
 //--Game still displays connected status when not connected properly (server is off)
 
+//CONVERT ALL SERVER SYSTEMS TO DATAGRAM PACKETS
+
 //Player joins server.
 //Server tells client what chunck their player is in.
 //This is added as a property of the player.
@@ -36,10 +38,10 @@ public class Client {
 	public double y;
 	public int toX;
 	public int toY;
-	private String serverIp = "130.195.7.68";
+	private String serverIp = "localhost";
 
-	private int windowWidth = 550;
-	private int windowHeight =550;
+	private int windowWidth = 1000;
+	private int windowHeight =700;
 	public int playerWidth = 30;
 	public int playerHeight = 30;
 
