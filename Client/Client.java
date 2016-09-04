@@ -1,11 +1,11 @@
 import java.awt.Graphics;
 
-//TODO 
+//TODO
 //--Make client side movement animation to counter slow server connection.
 //--Game still displays connected status when not connected properly (server is off)
 
 //Player joins server.
-//Server tells client what chunck their player is in. 
+//Server tells client what chunck their player is in.
 //This is added as a property of the player.
 //if others players have the same chunck id, render those players
 
@@ -36,13 +36,13 @@ public class Client {
 	public double y;
 	public int toX;
 	public int toY;
-	private String serverIp = "45.55.227.136";
-	
+	private String serverIp = "localhost";
+
 	private int windowWidth = 550;
 	private int windowHeight =550;
 	public int playerWidth = 30;
 	public int playerHeight = 30;
-	
+
 	//Imported from server.
 	public int moveSpeed = 0;
 	public int[] chunckCoordinates= new int[2];
@@ -92,7 +92,7 @@ public class Client {
 				} else {
 					connection.send(Character.toString(e.getKeyChar()));
 				}
-				
+
 				//If client has received move speed from the server, let the client draw moves instantly.
 				if(moveSpeed!=0){
 					if (Character.toString(e.getKeyChar()).equals("w")){
@@ -141,7 +141,7 @@ public class Client {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void draw(){
 		p.repaint();
 	}
