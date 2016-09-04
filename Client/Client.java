@@ -32,7 +32,7 @@ public class Client {
 	public Player player;
 	public ArrayList<Player> players;
 	public World world;
-	private ClientConnection connection;
+	public ClientConnection connection;
 
 	public Client(){
 		x=0;
