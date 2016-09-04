@@ -20,6 +20,8 @@ public class Panel extends JPanel {
 		g.drawString(client.players.size() + " Players online.", 150, 20);
 		if(client.connection!=null)
 			g.drawString("Connection ID: "+ client.connection.connectionId, 250, 20);
+		if(client.player!=null)
+			g.drawString("Currently in chunck: "+client.player.getChunckId(), 350, 20);
 		g.setColor(Color.green);
 		g.drawString(client.advice, 0, 40);
 		
@@ -27,11 +29,15 @@ public class Panel extends JPanel {
 		for(Player player : client.players){
 			//A bit of math to make sure the oval is centered.
 			//Player is drawn red, the other players drawn green
-			if(player.equals(client.player))
-				g.setColor(Color.red);
-			else 
-				g.setColor(Color.green);
-			g.fillOval(player.getX(), player.getY(), player.getWidth(), player.getHeight());
+			
+			//Only draw players if in the same chunck.
+			if(player.getChunckId()==client.player.getChunckId()){
+				if(player.equals(client.player))
+					g.setColor(Color.red);
+				else 
+					g.setColor(Color.green);
+				g.fillOval(player.getX(), player.getY(), player.getWidth(), player.getHeight());
+			}
 		}
 		
 		//TODO draw world

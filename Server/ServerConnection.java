@@ -36,7 +36,7 @@ public class ServerConnection {
 	public void update(){
 		for(Player player : server.players){
 			String playerPacket = "setPlayer" + " " + player.getX() + " " + player.getY()
-			+ " " + player.getWidth() + " " + player.getHeight() + " " + player.getId();
+			+ " " + player.getWidth() + " " + player.getHeight() + " " + player.getId() + " " + player.getChunckId();
 			send(playerPacket);
 		}
 	}
@@ -44,7 +44,7 @@ public class ServerConnection {
 	//For setting up a player that has just connected.
 	public void initPlayer(){
 		send("setConnectionId " + connectionId);
-		server.players.add(new Player(0,0,server.playerWidth,server.playerHeight,connectionId));
+		server.players.add(new Player(0,0,server.playerWidth,server.playerHeight,connectionId,server.spawnChunck.getId()));
 		server.updateClients();
 	}
 
@@ -63,7 +63,6 @@ public class ServerConnection {
 				}
 
 			} catch(IOException e){
-
 			}
 		}
 	}
@@ -83,10 +82,18 @@ public class ServerConnection {
 			if(line.equals("d")){
 				player.setX(player.getX()+server.moveSpeed);
 			}
+			checkTravel();
 		}
 		
 		server.updateClients();
 		System.out.println("Server recieved: " +line);
+	}
+	
+	//Checks if the player has adventured beyond their respective chucnk, and therefore if the player needs to be moved
+	//to a different chunck.
+	
+	private void checkTravel(){
+		
 	}
 
 }

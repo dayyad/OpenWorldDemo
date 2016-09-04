@@ -1,4 +1,19 @@
 import java.awt.Graphics;
+
+//TODO 
+//Make the chucnks have coordinates and not just ids.
+//make the client panel display the coordinates of the player in the world.
+
+//Player joins server.
+//Server tells client what chunck their player is in. 
+//This is added as a property of the player.
+//if others players have the same chunck id, render those players
+
+//Serverside, create a board of chuncks with ids.
+//each player when created is given the spawn chunck as their id.
+//if the player travels into an adjacent chucnk, their chucnk id gets changed to that one.
+//the updateClient function makes sure to update all players as well as their current chucnks.
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -108,7 +123,6 @@ public class Client {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
 	}
 	
 	public void draw(){

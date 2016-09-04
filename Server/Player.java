@@ -3,17 +3,26 @@ public class Player {
 	private int x;
 	private int y;
 	private final int id;
+	private int chunckId;
 	
 	private int width;
 	private int height;
 	
-	public Player(int x,int y,int width, int height,int id){
+	public Player(int x,int y,int width, int height,int id,int chunckId){
 		this.id = id;
-		
+		this.chunckId=chunckId;
 		this.x=x;
 		this.y=y;
 		this.width=width;
 		this.height=height;
+	}
+	
+	public void setChunckId(int id){
+		this.chunckId=id;
+	}
+	
+	public int getChunckId(){
+		return this.chunckId;
 	}
 	
 	public int getId(){

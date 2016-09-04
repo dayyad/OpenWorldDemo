@@ -29,6 +29,8 @@ public class Server {
 		//Init UI
 		players=new ArrayList<Player>();
 		chunckBoard = new Chunck[mapWidth][mapHeight];
+		this.fillBoard();
+		spawnChunck=findChunckById(0);
 		clients = new ArrayList<ServerConnection>();
 		frame = new JFrame("Server");
 		frame.setVisible(true);
@@ -46,11 +48,9 @@ public class Server {
 					client.send(Character.toString(e.getKeyChar()));
 				}
 			}
-
 			@Override
 			public void keyReleased(KeyEvent e) {
 			}
-
 			@Override
 			public void keyTyped(KeyEvent e) {
 			}
@@ -75,6 +75,26 @@ public class Server {
 				return player;
 		}
 		return null;
+	}
+	
+	public Chunck findChunckById(int id){
+		for(int x =0;x<chunckBoard.length;x++){
+			for(int y=0;y<chunckBoard[0].length;y++){
+				if(chunckBoard[x][y].getId()==id){
+					return chunckBoard[x][y];
+				}
+			}	
+		}
+		return null;
+	}
+	
+	//Geneerates chuncks for each slot on the board
+	public void fillBoard(){
+		for (int x= 0;x<chunckBoard.length;x++){
+			for(int y=0;y<chunckBoard[0].length;y++){
+				chunckBoard[x][y]=new Chunck();
+			}
+		}
 	}
 	
 	//Send all the clients current game state.
