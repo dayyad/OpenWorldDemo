@@ -1,30 +1,41 @@
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.net.Socket;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.SocketException;
 import java.util.Scanner;
 
 public class ClientConnection {
 	private Client client;
-	private Socket socket;
+	private DatagramSocket socket;
 	private Listener listener;
 	private Scanner scanner;
+	private String serverIp;
 	private PrintWriter writer;
 	public int connectionId;
 
-	public ClientConnection(Client client,Socket socket){
+	public ClientConnection(Client client,String serverIp){
+		this.serverIp=serverIp;
 		this.client=client;
-		this.socket=socket;
 		this.connectionId=0;
-
-		listener=new Listener();
-		listener.start();
+		try {
+			this.socket=new DatagramSocket(2222);
+			listener=new Listener();
+			listener.start();
+		} catch (SocketException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public void send(String string){
 		try {
-			writer=new PrintWriter(socket.getOutputStream());
-			writer.println(string + "\n");
-			writer.flush();
+			byte[] sendData = new byte[128];
+			sendData = string.getBytes();
+			DatagramPacket sendPacket = new DatagramPacket(sendData,sendData.length,new InetSocketAddress(serverIp, 2222));
+			socket.send(sendPacket);
 			System.out.println("Server sent to user: " + string);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -37,12 +48,12 @@ public class ClientConnection {
 		public void run(){
 			//Initialise the scanner listening
 			try{
-				scanner = new Scanner (socket.getInputStream());
+				byte[] receiveData=new byte[128];
+				DatagramPacket receivePacket = new DatagramPacket(receiveData,receiveData.length);
+
 				while(socket!=null){
-					if(scanner.hasNextLine()){
-						String line = scanner.nextLine();
-						processLine(line);
-					}
+					socket.receive(receivePacket);
+					processLine(receivePacket.getData().toString());
 				}
 
 			} catch(IOException e){
@@ -56,7 +67,7 @@ public class ClientConnection {
 		Scanner lineScanner = new Scanner(line);
 		while (lineScanner.hasNext()){
 			String nextPack = lineScanner.next();
-			
+
 			//Scans for connection id, setting current connection id to this.
 			if(nextPack.equals("setConnectionId")){
 				if(lineScanner.hasNextInt()){
@@ -72,7 +83,7 @@ public class ClientConnection {
 				int height = lineScanner.nextInt();
 				int id = lineScanner.nextInt();
 				int chunckId = lineScanner.nextInt();
-				
+
 				boolean found = false;
 				for(Player player : client.players){
 					if(player.getId()==id){
@@ -99,7 +110,7 @@ public class ClientConnection {
 			} else if(nextPack.equals("setMoveSpeed")){
 				client.moveSpeed=lineScanner.nextInt();
 			}
-				
+
 		}
 		client.draw();
 	}

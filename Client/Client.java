@@ -21,6 +21,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.IOException;
+import java.net.DatagramSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -133,15 +134,8 @@ public class Client {
 	//Opens connection to server.
 	public void openConnection(){
 
-		Socket socket;
-		try {
-			socket = new Socket(serverIp,2222);
-			connection = new ClientConnection(this,socket);
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		DatagramSocket socket;
+		connection = new ClientConnection(this,serverIp);
 	}
 
 	public void draw(){

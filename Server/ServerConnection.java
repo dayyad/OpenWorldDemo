@@ -1,38 +1,39 @@
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.net.Socket;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.util.Scanner;
+
 
 public class ServerConnection {
 	private Server server;
-	private Socket socket;
-	private Listener listener;
+	private DatagramSocket socket;
 	private Scanner scanner;
 	private PrintWriter writer;
+	public InetAddress remoteAddress;
 	public final int connectionId;
 	private static int lastId=0;
 
-	public ServerConnection(Server server,Socket socket){
+	public ServerConnection(Server server,InetAddress remoteAddress){
 		this.server=server;
-		this.socket=socket;
 		this.connectionId=lastId++;
 
-		listener=new Listener();
-		listener.start();
-		
 		initPlayer();
 	}
 
 	public void send(String string){
 		try {
-			writer=new PrintWriter(socket.getOutputStream());
-			writer.println(string + "\n");
-			writer.flush();
+			byte[] sendData = new byte[128];
+			sendData = string.getBytes();
+			DatagramPacket sendPacket = new DatagramPacket(sendData,sendData.length,remoteAddress,2222);
+			socket.send(sendPacket);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void update(){
 		//Sends player their chunck coordinates.
 		send("setChunckCoordinates" + " " + server.getChunckById(server.getPlayerById(connectionId).getChunckId()).getxPos() + " " + server.getChunckById(server.getPlayerById(connectionId).getChunckId()).getyPos());
@@ -43,7 +44,7 @@ public class ServerConnection {
 			send(playerPacket);
 		}
 	}
-	
+
 	//For setting up a player that has just connected.
 	public void initPlayer(){
 		send("setConnectionId " + connectionId);
@@ -53,25 +54,8 @@ public class ServerConnection {
 	}
 
 	//ServerListener
-	class Listener extends Thread{
 
-		public void run(){
-			//Initialise the scanner listening
-			try{
-				scanner = new Scanner (socket.getInputStream());
-				while(socket!=null){
-					if(scanner.hasNextLine()){
-						String line = scanner.nextLine();
-						processLine(line);
-					}
-				}
-
-			} catch(IOException e){
-			}
-		}
-	}
-
-	private void processLine(String line){
+	public void processLine(String line){
 		Player player = server.getPlayerById(connectionId);
 		if(player!=null){
 			if(line.equals("w")){
@@ -88,21 +72,21 @@ public class ServerConnection {
 			}
 			checkTravel();
 		}
-		
+
 		server.updateClients();
 		System.out.println("Server recieved: " +line);
 	}
-	
+
 	//Checks if the player has adventured beyond their respective chucnk, and therefore if the player needs to be moved
 	//to a different chunck.
-	
+
 	private void checkTravel(){
 		Player player = server.getPlayerById(connectionId);
 		int x = player.getX();
 		int y = player.getY();
 		int chunckX = server.getChunckById(player.getChunckId()).getxPos();
 		int chunckY = server.getChunckById(player.getChunckId()).getyPos();
-		
+
 		if (x>server.chunckWidth && chunckX<server.chunckBoard.length-1){
 			//To right of chunck
 				System.out.println("Ran into wall right");
@@ -136,7 +120,7 @@ public class ServerConnection {
 			System.out.println("moved player down");
 			player.setY(0+server.playerHeight);
 		}
-		
+
 		server.updateClients();
 	}
 
