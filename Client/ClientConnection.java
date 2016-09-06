@@ -34,9 +34,10 @@ public class ClientConnection {
 		try {
 			byte[] sendData = new byte[128];
 			sendData = string.getBytes();
+			System.out.println(sendData.length);
 			DatagramPacket sendPacket = new DatagramPacket(sendData,sendData.length,new InetSocketAddress(serverIp, 2222));
 			socket.send(sendPacket);
-			System.out.println("Server sent to user: " + string);
+			System.out.println("Client Sent: " + string);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

@@ -74,8 +74,10 @@ public class Server {
 
 		try {
 			serverSocket = new DatagramSocket(2222);
-			byte[] receiveData = new byte[128];
+			byte[] receiveData = new byte[1];
+			System.out.println("Server started...");
 			while(true){
+				System.out.println("Looped main server receive loop once.");
 				DatagramPacket receivePacket = new DatagramPacket(receiveData,receiveData.length);
 				serverSocket.receive(receivePacket);
 				InetSocketAddress remoteSocketAddress = new InetSocketAddress(receivePacket.getAddress(),receivePacket.getPort());
@@ -90,7 +92,7 @@ public class Server {
 				if(!found){
 					clients.add(new ServerConnection(this,remoteSocketAddress));
 				}
-
+				System.out.println("Server recieved a bit of data :)");
 
 			}
 		} catch (IOException e) {
