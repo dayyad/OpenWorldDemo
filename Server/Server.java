@@ -74,24 +74,26 @@ public class Server {
 		//Attempt to start serversocket
 
 		try {
-			serverSocket = new DatagramSocket(new InetSocketAddress("45.55.227.136", 2222));
-			byte[] receiveData = new byte[1];
+			serverSocket = new DatagramSocket(new InetSocketAddress(InetAddress.getByName("45.55.227.136"), 3322));
 			System.out.println("Server started...");
 			while(true){
+				byte[] receiveData = new byte[100];
 				System.out.println("Looped main server receive loop once.");
 				DatagramPacket receivePacket = new DatagramPacket(receiveData,receiveData.length);
 				serverSocket.receive(receivePacket);
-				InetSocketAddress remoteSocketAddress = new InetSocketAddress(receivePacket.getAddress(),receivePacket.getPort());
+				System.out.println("Packet recieved from: " + receivePacket.getSocketAddress().toString());
+				SocketAddress remoteSocketAddress = receivePacket.getSocketAddress();
+				System.out.println("MORE INFO: " + Integer.toString(receivePacket.getPort()) + " " + receivePacket.getAddress().toString());
 
 				boolean found = false;
 				for(ServerConnection client : clients){
-					if(client.socketAddress.equals(remoteSocketAddress)){
-						client.processLine(receivePacket.getData().toString());
+					if(client.remoteAddress.equals(receivePacket.getAddress())){
+						client.processLine(new String(receivePacket.getData()));
 						found=true;
 					}
 				}
 				if(!found){
-					clients.add(new ServerConnection(this,remoteSocketAddress));
+					clients.add(new ServerConnection(this,receivePacket.getAddress(),receivePacket.getPort()));
 				}
 				System.out.println("Server recieved a bit of data :)");
 
@@ -101,12 +103,13 @@ public class Server {
 		}
 	}
 
-	public void send(String string, SocketAddress address){
+	public void send(String string, ServerConnection connection){
 		try {
-			byte[] sendData = new byte[128];
-			sendData = string.getBytes();
-			DatagramPacket sendPacket = new DatagramPacket(sendData,sendData.length,address);
+			byte[] sendData = string.getBytes();
+			DatagramPacket sendPacket = new DatagramPacket(sendData,sendData.length,connection.remoteAddress,connection.remotePort);
 			serverSocket.send(sendPacket);
+			System.out.println("Sent : " + string + " to: " + connection.remoteAddress.getHostName() + ":" + connection.remotePort );
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

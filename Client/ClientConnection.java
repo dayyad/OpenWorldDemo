@@ -1,5 +1,4 @@
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -11,9 +10,7 @@ public class ClientConnection {
 	private Client client;
 	private DatagramSocket socket;
 	private Listener listener;
-	private Scanner scanner;
 	private String serverIp;
-	private PrintWriter writer;
 	public int connectionId;
 
 	public ClientConnection(Client client,String serverIp){
@@ -21,7 +18,7 @@ public class ClientConnection {
 		this.client=client;
 		this.connectionId=0;
 		try {
-			this.socket=new DatagramSocket(2222);
+			this.socket=new DatagramSocket();
 			listener=new Listener();
 			listener.start();
 		} catch (SocketException e) {
@@ -32,10 +29,9 @@ public class ClientConnection {
 
 	public void send(String string){
 		try {
-			byte[] sendData = new byte[128];
-			sendData = string.getBytes();
-			System.out.println(sendData.length);
-			DatagramPacket sendPacket = new DatagramPacket(sendData,sendData.length,new InetSocketAddress(serverIp, 2222));
+			byte[] sendData = string.getBytes();
+			System.out.println("Client: trying to send data of lenght: " + sendData.length);
+			DatagramPacket sendPacket = new DatagramPacket(sendData,sendData.length,new InetSocketAddress(InetAddress.getByName(serverIp), 3322));
 			socket.send(sendPacket);
 			System.out.println("Client Sent: " + string);
 		} catch (IOException e) {
@@ -49,12 +45,12 @@ public class ClientConnection {
 		public void run(){
 			//Initialise the scanner listening
 			try{
-				byte[] receiveData=new byte[128];
+				byte[] receiveData=new byte[100];
 				DatagramPacket receivePacket = new DatagramPacket(receiveData,receiveData.length);
 
 				while(socket!=null){
 					socket.receive(receivePacket);
-					processLine(receivePacket.getData().toString());
+					processLine(new String((receivePacket.getData())));
 				}
 
 			} catch(IOException e){
@@ -64,7 +60,8 @@ public class ClientConnection {
 	}
 
 	private void processLine(String line){
-		System.out.println(line);
+		line = line.trim();
+		System.out.println("Client received: " +line);
 		Scanner lineScanner = new Scanner(line);
 		while (lineScanner.hasNext()){
 			String nextPack = lineScanner.next();
@@ -113,6 +110,7 @@ public class ClientConnection {
 			}
 
 		}
+		lineScanner.close();
 		client.draw();
 	}
 }

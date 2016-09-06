@@ -1,4 +1,3 @@
-import java.awt.Graphics;
 
 //TODO
 //--Make client side movement animation to counter slow server connection.
@@ -20,10 +19,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.io.IOException;
-import java.net.DatagramSocket;
-import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -31,7 +26,6 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 public class Client {
-	private Graphics g;
 	private JPanel p;
 	private JFrame frame;
 	private boolean connected;
