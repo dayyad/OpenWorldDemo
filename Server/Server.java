@@ -1,7 +1,7 @@
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
-import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.util.ArrayList;
 
@@ -78,7 +78,7 @@ public class Server {
 			while(true){
 				DatagramPacket receivePacket = new DatagramPacket(receiveData,receiveData.length);
 				serverSocket.receive(receivePacket);
-				SocketAddress remoteSocketAddress = receivePacket.getSocketAddress();
+				InetSocketAddress remoteSocketAddress = new InetSocketAddress(receivePacket.getAddress(),receivePacket.getPort());
 
 				boolean found = false;
 				for(ServerConnection client : clients){
