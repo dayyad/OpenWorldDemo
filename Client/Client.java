@@ -133,8 +133,6 @@ public class Client {
 
 	//Opens connection to server.
 	public void openConnection(){
-
-		DatagramSocket socket;
 		connection = new ClientConnection(this,serverIp);
 	}
 

@@ -2,6 +2,7 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.SocketAddress;
 import java.util.ArrayList;
 
 import javax.swing.JFrame;
@@ -77,21 +78,32 @@ public class Server {
 			while(true){
 				DatagramPacket receivePacket = new DatagramPacket(receiveData,receiveData.length);
 				serverSocket.receive(receivePacket);
-				InetAddress remoteAddress = receivePacket.getAddress();
+				SocketAddress remoteSocketAddress = receivePacket.getSocketAddress();
 
 				boolean found = false;
 				for(ServerConnection client : clients){
-					if(client.remoteAddress.equals(remoteAddress)){
+					if(client.socketAddress.equals(remoteSocketAddress)){
 						client.processLine(receivePacket.getData().toString());
 						found=true;
 					}
 				}
 				if(!found){
-					clients.add(new ServerConnection(this,remoteAddress));
+					clients.add(new ServerConnection(this,remoteSocketAddress));
 				}
 
 
 			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void send(String string, SocketAddress address){
+		try {
+			byte[] sendData = new byte[128];
+			sendData = string.getBytes();
+			DatagramPacket sendPacket = new DatagramPacket(sendData,sendData.length,address);
+			serverSocket.send(sendPacket);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

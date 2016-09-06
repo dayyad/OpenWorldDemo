@@ -1,9 +1,7 @@
-import java.io.IOException;
 import java.io.PrintWriter;
-import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 import java.util.Scanner;
 
 
@@ -12,43 +10,36 @@ public class ServerConnection {
 	private DatagramSocket socket;
 	private Scanner scanner;
 	private PrintWriter writer;
-	public InetAddress remoteAddress;
+	public SocketAddress socketAddress;
 	public final int connectionId;
 	private static int lastId=0;
 
-	public ServerConnection(Server server,InetAddress remoteAddress){
+	public ServerConnection(Server server,SocketAddress socketAddress){
 		this.server=server;
 		this.connectionId=lastId++;
 
 		initPlayer();
 	}
 
-	public void send(String string){
-		try {
-			byte[] sendData = new byte[128];
-			sendData = string.getBytes();
-			DatagramPacket sendPacket = new DatagramPacket(sendData,sendData.length,remoteAddress,2222);
-			socket.send(sendPacket);
-		} catch (IOException e) {
-			e.printStackTrace();
+	public void update(){
+		if(this.socketAddress!=null){
+
+		}
+		//server.sends player their chunck coordinates.
+		server.send("setChunckCoordinates" + " " + server.getChunckById(server.getPlayerById(connectionId).getChunckId()).getxPos() + " " + server.getChunckById(server.getPlayerById(connectionId).getChunckId()).getyPos(),socketAddress);
+		for(Player player : server.players){
+			//server.sends information about all the players
+			String playerPacket = "setPlayer" + " " + player.getX() + " " + player.getY()
+			+ " " + player.getWidth() + " " + player.getHeight() + " " + player.getId() + " " + player.getChunckId();
+			server.send(playerPacket,socketAddress);
 		}
 	}
 
-	public void update(){
-		//Sends player their chunck coordinates.
-		send("setChunckCoordinates" + " " + server.getChunckById(server.getPlayerById(connectionId).getChunckId()).getxPos() + " " + server.getChunckById(server.getPlayerById(connectionId).getChunckId()).getyPos());
-		for(Player player : server.players){
-			//Sends information about all the players
-			String playerPacket = "setPlayer" + " " + player.getX() + " " + player.getY()
-			+ " " + player.getWidth() + " " + player.getHeight() + " " + player.getId() + " " + player.getChunckId();
-			send(playerPacket);
-		}
-	}
 
 	//For setting up a player that has just connected.
 	public void initPlayer(){
-		send("setConnectionId " + connectionId);
-		send("setMoveSpeed " + server.moveSpeed);
+		server.send("setConnectionId " + connectionId,socketAddress);
+		server.send("setMoveSpeed " + server.moveSpeed,socketAddress);
 		server.players.add(new Player(60,60,server.playerWidth,server.playerHeight,connectionId,server.spawnChunck.getId()));
 		server.updateClients();
 	}
