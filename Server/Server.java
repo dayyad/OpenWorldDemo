@@ -1,6 +1,7 @@
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.util.ArrayList;
@@ -73,7 +74,7 @@ public class Server {
 		//Attempt to start serversocket
 
 		try {
-			serverSocket = new DatagramSocket(2222);
+			serverSocket = new DatagramSocket(new InetSocketAddress("45.55.227.136", 2222));
 			byte[] receiveData = new byte[1];
 			System.out.println("Server started...");
 			while(true){
