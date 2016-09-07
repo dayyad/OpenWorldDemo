@@ -33,7 +33,7 @@ public class Client {
 	public double y;
 	public int toX;
 	public int toY;
-	private String serverIp = "45.55.227.136";
+	private String serverIp = "128.199.236.107";
 
 	private int windowWidth = 1000;
 	private int windowHeight =700;

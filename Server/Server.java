@@ -74,7 +74,7 @@ public class Server {
 		//Attempt to start serversocket
 
 		try {
-			serverSocket = new DatagramSocket(new InetSocketAddress(InetAddress.getByName("45.55.227.136"), 3322));
+			serverSocket = new DatagramSocket(new InetSocketAddress(InetAddress.getByName("128.199.236.107"), 3322));
 			System.out.println("Server started...");
 			while(true){
 				byte[] receiveData = new byte[100];
@@ -109,7 +109,7 @@ public class Server {
 			DatagramPacket sendPacket = new DatagramPacket(sendData,sendData.length,connection.remoteAddress,connection.remotePort);
 			serverSocket.send(sendPacket);
 			System.out.println("Sent : " + string + " to: " + connection.remoteAddress.getHostName() + ":" + connection.remotePort );
-			
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
