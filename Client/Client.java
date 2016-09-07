@@ -129,9 +129,16 @@ public class Client {
 	public void openConnection(){
 		connection = new ClientConnection(this,serverIp);
 	}
+	long endTime;
+	long startTime = System.nanoTime();
 
 	public void draw(){
-		p.repaint();
+		endTime = System.nanoTime();
+		System.out.println(endTime-startTime);
+		if(endTime-startTime>100000000){
+			p.repaint();
+			startTime = System.nanoTime();
+		}
 	}
 
 	public static void main(String[] args) {
