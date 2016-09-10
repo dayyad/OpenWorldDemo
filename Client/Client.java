@@ -16,6 +16,7 @@
 //if the player travels into an adjacent chucnk, their chucnk id gets changed to that one.
 //the updateClient function makes sure to update all players as well as their current chucnks.
 
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -27,10 +28,13 @@ import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 public class Client {
 	private JPanel p;
 	private JFrame frame;
+	private JTextField messageField;
+	public JTextField console;
 	private boolean connected;
 	public double x;
 	public double y;
@@ -70,6 +74,10 @@ public class Client {
 		frame.setSize(windowWidth, windowHeight);
 
 		this.p = new Panel(this);
+		console=new JTextField("Console:");
+		frame.add(console);
+		console.setBounds(900, 0, 100, frame.getHeight());
+		console.setBackground(new Color(240,240,240));
 
 		//Sets the graphics so that we can draw things.
 		JButton button = new JButton("Press enter to join localhost.");
@@ -83,7 +91,7 @@ public class Client {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				// TODO Auto-generated method stub
-				System.out.println(e.getKeyChar());
+				//System.out.println(e.getKeyChar());
 				if(connection==null){
 					status = "Connecting...";
 					advice = "Try browsing memes while you wait...";
@@ -92,9 +100,15 @@ public class Client {
 					connection.send(Character.toString(e.getKeyChar()));
 				}
 
-				//If client has received move speed from the server, let the client draw moves instantly.
+				String key = Character.toString(e.getKeyChar());	
 				
-				draw();
+				if(key.equals("m")){
+					doDraftMessage();
+				}
+				
+				if(KeyEvent.getKeyText(e.getKeyCode()).equals("Space")){
+					doSendMessage();
+				}
 			}
 
 			@Override
@@ -111,7 +125,7 @@ public class Client {
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 
-				System.out.println(e.getActionCommand());
+				//System.out.println(e.getActionCommand());
 			}
 		});
 		
@@ -130,8 +144,8 @@ public class Client {
 	public void exitGame(){
 		if(connection!=null){
     		connection.send("exit");
+        	connection.close();
     	}
-    	connection.close();
     	frame.dispose();
     	System.exit(0);
 	}
@@ -145,9 +159,29 @@ public class Client {
 
 	public void draw(){
 		endTime = System.nanoTime();
-		System.out.println(endTime-startTime);
+		//System.out.println(endTime-startTime);
 			p.repaint();
 			startTime = System.nanoTime();
+	}
+	
+	public void doDraftMessage(){
+		if(messageField==null){
+			messageField = new JTextField(5);
+			frame.add(messageField);
+			messageField.setText("Enter Message:");
+			//System.out.println("Tryng to open text box");
+			messageField.setVisible(true);
+			messageField.setBounds(frame.getWidth()/2-100, frame.getHeight()/2 -100, 200, 100);
+			messageField.setBackground(new Color(240,240,240));
+		}
+	}
+	
+	public void doSendMessage(){
+		if(messageField!=null){
+			connection.send("message " + messageField.getText());
+			frame.remove(messageField);
+			messageField=null;
+		}
 	}
 
 	public static void main(String[] args) {

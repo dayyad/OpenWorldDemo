@@ -75,15 +75,15 @@ public class Server {
 
 		try {
 			serverSocket = new DatagramSocket(new InetSocketAddress(InetAddress.getByName("128.199.236.107"), 3322));
-			System.out.println("Server started...");
+			//System.out.println("Server started...");
 			while(true){
 				byte[] receiveData = new byte[100];
-				System.out.println("Looped main server receive loop once.");
+				//System.out.println("Looped main server receive loop once.");
 				DatagramPacket receivePacket = new DatagramPacket(receiveData,receiveData.length);
 				serverSocket.receive(receivePacket);
-				System.out.println("Packet recieved from: " + receivePacket.getSocketAddress().toString());
+				//System.out.println("Packet recieved from: " + receivePacket.getSocketAddress().toString());
 				SocketAddress remoteSocketAddress = receivePacket.getSocketAddress();
-				System.out.println("MORE INFO: " + Integer.toString(receivePacket.getPort()) + " " + receivePacket.getAddress().toString());
+				//System.out.println("MORE INFO: " + Integer.toString(receivePacket.getPort()) + " " + receivePacket.getAddress().toString());
 
 				boolean found = false;
 				for(ServerConnection client : clients){
@@ -96,7 +96,7 @@ public class Server {
 				if(!found){
 					clients.add(new ServerConnection(this,receivePacket.getAddress(),receivePacket.getPort()));
 				}
-				System.out.println("Server recieved a bit of data :)");
+				//System.out.println("Server recieved a bit of data :)");
 
 			}
 		} catch (IOException e) {
@@ -104,15 +104,23 @@ public class Server {
 		}
 	}
 
+	//Sends string to specified client
 	public void send(String string, ServerConnection connection){
 		try {
 			byte[] sendData = string.getBytes();
 			DatagramPacket sendPacket = new DatagramPacket(sendData,sendData.length,connection.remoteAddress,connection.remotePort);
 			serverSocket.send(sendPacket);
-			System.out.println("Sent : " + string + " to: " + connection.remoteAddress.getHostName() + ":" + connection.remotePort );
+			//System.out.println("Sent : " + string + " to: " + connection.remoteAddress.getHostName() + ":" + connection.remotePort );
 
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+	}
+	
+	//Sends string to all connected clients
+	public void sendAll(String string){
+		for(ServerConnection client : clients){
+			send(string,client);
 		}
 	}
 
@@ -156,7 +164,7 @@ public class Server {
 		for(ServerConnection client : clients){
 			if(client.connectionId==connectionId){
 				client=null;
-				System.out.println("Client disconnected.");
+				//System.out.println("Client disconnected.");
 			}
 		}
 	}

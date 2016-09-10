@@ -30,10 +30,10 @@ public class ClientConnection {
 	public void send(String string){
 		try {
 			byte[] sendData = string.getBytes();
-			System.out.println("Client: trying to send data of lenght: " + sendData.length);
+			//System.out.println("Client: trying to send data of lenght: " + sendData.length);
 			DatagramPacket sendPacket = new DatagramPacket(sendData,sendData.length,new InetSocketAddress(InetAddress.getByName(serverIp), 3322));
 			socket.send(sendPacket);
-			System.out.println("Client Sent: " + string);
+			//System.out.println("Client Sent: " + string);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -61,7 +61,7 @@ public class ClientConnection {
 
 	private void processLine(String line){
 		line = line.trim();
-		System.out.println("Client received: " +line);
+		//System.out.println("Client received: " +line);
 		Scanner lineScanner = new Scanner(line);
 		while (lineScanner.hasNext()){
 			String nextPack = lineScanner.next();
@@ -72,7 +72,7 @@ public class ClientConnection {
 					this.connectionId=lineScanner.nextInt();
 					client.status="Connected";
 					client.advice="Use 'WASD' to move.";
-					System.out.println("Client: Successfuly set connectionId to: " + connectionId);
+					//System.out.println("Client: Successfuly set connectionId to: " + connectionId);
 				}
 			}
 			//Scans player packets and updates the local player data.
@@ -93,13 +93,13 @@ public class ClientConnection {
 						player.setHeight(height);
 						player.setChunckId(chunckId);
 						found=true;
-						System.out.println("Client: found player, dont have to add");
+						//System.out.println("Client: found player, dont have to add");
 					}
 				}
 				if(!found){
 					Player newPlayer=new Player(x,y,width,height,id,chunckId);
 					client.players.add(newPlayer);
-					System.out.println("Client: added new player.");
+					//System.out.println("Client: added new player.");
 					//If the newly created player has same id as the connection then set the player to be our player.
 					if(newPlayer.getId()==connectionId)
 						client.player=newPlayer;

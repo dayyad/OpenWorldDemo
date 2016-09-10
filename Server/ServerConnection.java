@@ -1,5 +1,6 @@
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.util.Scanner;
 
 public class ServerConnection {
 	private Server server;
@@ -43,6 +44,8 @@ public class ServerConnection {
 
 	public void processLine(String line){
 		line = line.trim();
+		Scanner lScanner = new Scanner(line);
+		
 		Player player = server.getPlayerById(connectionId);
 		if(player!=null){
 			if(line.equals("w")){
@@ -60,11 +63,26 @@ public class ServerConnection {
 			if(line.equals("exit")){
 				server.removeClient(connectionId);
 			}
+			
+			//TODO make this better and find the player name afterwards as well.
+			//POTENTIALLY creating another loop within this one...
+			if(line.contains("message")){
+				line = line.substring(6);
+				String message ="";
+				while(lScanner.hasNext()){
+					String next = lScanner.next();
+					message=message+" " + next;
+				}
+				server.sendAll("message " + message);
+			}
+			
 			checkTravel();
 		}
 
 		server.updateClients();
-		System.out.println("Server recieved: " +line);
+		//System.out.println("Server recieved: " +line);
+		
+		lScanner.close();
 	}
 
 	//Checks if the player has adventured beyond their respective chucnk, and therefore if the player needs to be moved
@@ -79,35 +97,35 @@ public class ServerConnection {
 
 		if (x>server.chunckWidth && chunckX<server.chunckBoard.length-1){
 			//To right of chunck
-				System.out.println("Ran into wall right");
+				//System.out.println("Ran into wall right");
 				player.setChunckId(server.chunckBoard[chunckX+1][chunckY].getId());
 				player.setX(0+server.playerWidth);
 		} else if(x>server.chunckWidth){
-			System.out.println("moved player left");
+			//System.out.println("moved player left");
 			player.setX(server.chunckWidth-server.playerWidth);
 		} if(x<0 && chunckX>0){
 			//To left of chunck
-			    System.out.println("Ran into wall left");
+			    //System.out.println("Ran into wall left");
 				player.setChunckId(server.chunckBoard[chunckX-1][chunckY].getId());
 				player.setX(server.chunckWidth-server.playerWidth);
 		} else if(x<0){
-			System.out.println("moved player right");
+			//System.out.println("moved player right");
 			player.setX(0+server.playerHeight);
 		} if(y>server.chunckHeight && chunckY < server.chunckBoard[0].length-1){
 			//Bellow chunck
 				player.setChunckId(server.chunckBoard[chunckX][chunckY+1].getId());
 				player.setY(0+server.playerHeight);
-				System.out.println("Ran into wall down");
+				//System.out.println("Ran into wall down");
 		} else if(y>server.chunckHeight){
-			System.out.println("moved player up");
+			//System.out.println("moved player up");
 			player.setY(server.chunckHeight-server.playerHeight);
 		} if(y<0 && chunckY>0){
 			//Above chunck
 				player.setChunckId(server.chunckBoard[chunckX][chunckY-1].getId());
 				player.setY(server.chunckHeight-server.playerHeight);
-				System.out.println("Ran into wall up");
+				//System.out.println("Ran into wall up");
 		} else if(y<0){
-			System.out.println("moved player down");
+			//System.out.println("moved player down");
 			player.setY(0+server.playerHeight);
 		}
 
