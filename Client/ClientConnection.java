@@ -115,4 +115,12 @@ public class ClientConnection {
 		lineScanner.close();
 		client.draw();
 	}
+	
+	@SuppressWarnings("deprecation")
+	public void close(){
+		
+		socket.close();
+		socket=null;//Gets the listener out of its loop.
+	}
+	
 }

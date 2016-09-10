@@ -87,7 +87,8 @@ public class Server {
 
 				boolean found = false;
 				for(ServerConnection client : clients){
-					if(client.remoteAddress.equals(receivePacket.getAddress())){
+					//If client not connecting from existing address then add new client.
+					if(client.remoteAddress.equals(receivePacket.getAddress()) && client.remotePort == receivePacket.getPort()){
 						client.processLine(new String(receivePacket.getData()));
 						found=true;
 					}
@@ -154,7 +155,7 @@ public class Server {
 	public void removeClient(int connectionId){
 		for(ServerConnection client : clients){
 			if(client.connectionId==connectionId){
-				clients.remove(client);
+				client=null;
 				System.out.println("Client disconnected.");
 			}
 		}

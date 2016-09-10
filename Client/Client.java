@@ -1,7 +1,8 @@
 
 //TODO
 //--Make client side movement animation to counter slow server connection.
-//--Game still displays connected status when not connected properly (server is off)
+//--Implement better server client handshake when connecting to ensure conenction
+//--Deal with disconnections properly.
 
 //CONVERT ALL SERVER SYSTEMS TO DATAGRAM PACKETS
 
@@ -120,19 +121,19 @@ public class Client {
 		{
 		    public void windowClosing(WindowEvent e)
 		    {	
-		    	if(connection!=null){
-		    		connection.send("exit");
-		    	}
-		    	
-		    	frame.dispose();
-		    	System.exit(0);
+		    	exitGame();
 		    }
 		});
-		
 	}
 	
+	//Exit protocol.
 	public void exitGame(){
-		
+		if(connection!=null){
+    		connection.send("exit");
+    	}
+    	connection.close();
+    	frame.dispose();
+    	System.exit(0);
 	}
 
 	//Opens connection to server.
