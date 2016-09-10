@@ -57,6 +57,9 @@ public class ServerConnection {
 			if(line.equals("d")){
 				player.setX(player.getX()+server.moveSpeed);
 			}
+			if(line.equals("exit")){
+				server.removeClient(connectionId);
+			}
 			checkTravel();
 		}
 

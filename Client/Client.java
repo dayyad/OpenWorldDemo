@@ -19,6 +19,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -63,7 +65,7 @@ public class Client {
 		//Creates the jframe/
 		frame = new JFrame("Client");
 		frame.setVisible(true);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		//frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setSize(windowWidth, windowHeight);
 
 		this.p = new Panel(this);
@@ -81,27 +83,16 @@ public class Client {
 			public void keyPressed(KeyEvent e) {
 				// TODO Auto-generated method stub
 				System.out.println(e.getKeyChar());
-				if(!connected){
-					connected=true;
-					status = "Connected.";
-					advice = "WASD to move.";
+				if(connection==null){
+					status = "Connecting...";
+					advice = "Try browsing memes while you wait...";
 					openConnection();
 				} else {
 					connection.send(Character.toString(e.getKeyChar()));
 				}
 
 				//If client has received move speed from the server, let the client draw moves instantly.
-				if(moveSpeed!=0){
-					if (Character.toString(e.getKeyChar()).equals("w")){
-						player.setY(player.getY()-moveSpeed);
-					} if (Character.toString(e.getKeyChar()).equals("a")){
-						player.setX(player.getX()-moveSpeed);
-					} if (Character.toString(e.getKeyChar()).equals("s")){
-						player.setY(player.getY()+moveSpeed);
-					} if (Character.toString(e.getKeyChar()).equals("d")){
-						player.setX(player.getX()+moveSpeed);
-					}
-				}
+				
 				draw();
 			}
 
@@ -115,7 +106,6 @@ public class Client {
 		});
 
 		button.addActionListener(new ActionListener() {
-
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
@@ -123,6 +113,26 @@ public class Client {
 				System.out.println(e.getActionCommand());
 			}
 		});
+		
+		//Adds listener for when game is closed to send exit message to server
+		//and to stop execution of client.
+		frame.addWindowListener(new WindowAdapter()
+		{
+		    public void windowClosing(WindowEvent e)
+		    {	
+		    	if(connection!=null){
+		    		connection.send("exit");
+		    	}
+		    	
+		    	frame.dispose();
+		    	System.exit(0);
+		    }
+		});
+		
+	}
+	
+	public void exitGame(){
+		
 	}
 
 	//Opens connection to server.
@@ -135,10 +145,8 @@ public class Client {
 	public void draw(){
 		endTime = System.nanoTime();
 		System.out.println(endTime-startTime);
-		if(endTime-startTime>100000000){
 			p.repaint();
 			startTime = System.nanoTime();
-		}
 	}
 
 	public static void main(String[] args) {

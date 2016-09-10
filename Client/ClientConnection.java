@@ -70,6 +70,8 @@ public class ClientConnection {
 			if(nextPack.equals("setConnectionId")){
 				if(lineScanner.hasNextInt()){
 					this.connectionId=lineScanner.nextInt();
+					client.status="Connected";
+					client.advice="Use 'WASD' to move.";
 					System.out.println("Client: Successfuly set connectionId to: " + connectionId);
 				}
 			}

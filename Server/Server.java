@@ -150,6 +150,15 @@ public class Server {
 			client.update();
 		}
 	}
+	
+	public void removeClient(int connectionId){
+		for(ServerConnection client : clients){
+			if(client.connectionId==connectionId){
+				clients.remove(client);
+				System.out.println("Client disconnected.");
+			}
+		}
+	}
 
 	public static void main(String[] args) {
 		new Server();

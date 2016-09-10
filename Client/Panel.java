@@ -27,7 +27,7 @@ public class Panel extends JPanel {
 			g.setColor(Color.blue);
 			g.setFont(new Font("serif", Font.PLAIN, 10));
 			g.drawString("Some of following features yet to be added.", 580, 20);
-			g.drawString("Press 'M' to send message", 580, 20);
+			g.drawString("Press 'M' to send message", 580, 40);
 		}
 		g.setColor(Color.green);
 		g.drawString(client.advice, 0, 40);
