@@ -26,10 +26,10 @@ import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
-import javax.swing.JTextField;
 
 public class Client {
 	private JPanel p;
@@ -72,7 +72,7 @@ public class Client {
 		frame = new JFrame("Client");
 		frame.setVisible(true);
 		frame.setAutoRequestFocus(true);
-		//frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
 		frame.setSize(windowWidth, windowHeight);
 
 		this.p = new Panel(this);
@@ -98,9 +98,9 @@ public class Client {
 				if(connection==null){
 					status = "Connecting...";
 					advice = "Try browsing memes while you wait...";
-					openConnection();
+					//openConnection();
 				} else {
-					connection.send(Character.toString(e.getKeyChar()));
+					//connection.send(Character.toString(e.getKeyChar()));
 				}
 
 				String key = Character.toString(e.getKeyChar());
@@ -116,6 +116,9 @@ public class Client {
 
 			@Override
 			public void keyTyped(KeyEvent e) {
+				if(KeyEvent.getKeyText(e.getKeyCode()).equals("Enter")){
+					doSendMessage();
+				}
 			}
 
 			@Override
@@ -168,6 +171,7 @@ public class Client {
 	}
 
 	public void doDraftMessage(){
+		System.out.println("Trying to draft");
 		if(messageField==null){
 			messageField = new JTextArea();
 			frame.add(messageField);
@@ -175,40 +179,22 @@ public class Client {
 			System.out.println("Tryng to open text box");
 			messageField.setBounds(frame.getWidth()/2-100, frame.getHeight()/2 -100, 200, 100);
 			messageField.setBackground(new Color(240,240,240));
-			messageField.addKeyListener(new KeyListener(){
-
-				@Override
-				public void keyTyped(KeyEvent e) {
-
-				}
-
-				@Override
-				public void keyPressed(KeyEvent e) {
-					if(KeyEvent.getKeyText(e.getKeyCode()).equals("Enter")){
-						doSendMessage();
-					}
-				}
-
-				@Override
-				public void keyReleased(KeyEvent e) {
-
-				}
-
-			});
 			messageField.setVisible(true);
-		} else if(!messageField.isVisible()){
-			messageField.setVisible(true);
+		} else if (!messageField.isVisible()){
+			frame.add(messageField);
 			messageField.setText("Enter Message: ");
+			messageField.setVisible(true);
+			frame.repaint();
 		}
 	}
 
 	public void doSendMessage(){
-		if(messageField!=null && messageField.isVisible()){
-
+		if(messageField!=null){
 			// UNTAB THIS FOR THE GAME TO WORK connection.send("message " + messageField.getText());
 			messageField.setVisible(false);
-			messageField.setFocusable(false);
-			frame.requestFocus();
+			frame.remove(messageField);
+			frame.repaint();
+			p.requestFocus();
 			System.out.println("THIS WORKS");
 		}
 	}
