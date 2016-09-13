@@ -29,13 +29,13 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.JTextArea;
+import javax.swing.JTextField;
 
 public class Client {
 	private JPanel p;
 	private JFrame frame;
-	private JTextArea messageField;
-	public JTextArea console;
+	private JTextField messageField;
+	public JTextField console;
 	private boolean connected;
 	public double x;
 	public double y;
@@ -78,7 +78,7 @@ public class Client {
 		this.p = new Panel(this);
 		//Draws console
 //
-//		console=new JTextArea("Console:");
+//		console=new JTextField("Console:");
 //		frame.add(console);
 //		console.setBounds(900, 0, 100, frame.getHeight());
 //		console.setBackground(new Color(240,240,240));
@@ -173,18 +173,49 @@ public class Client {
 	public void doDraftMessage(){
 		System.out.println("Trying to draft");
 		if(messageField==null){
-			messageField = new JTextArea();
+			messageField = new JTextField();
 			frame.add(messageField);
 			messageField.setText("Enter Message:");
 			System.out.println("Tryng to open text box");
 			messageField.setBounds(frame.getWidth()/2-100, frame.getHeight()/2 -100, 200, 100);
+			messageField.setBounds(0, 0, 200, 200);
 			messageField.setBackground(new Color(240,240,240));
 			messageField.setVisible(true);
+			addMessageKeyListener();
 		} else if (!messageField.isVisible()){
+			messageField = new JTextField();
 			frame.add(messageField);
-			messageField.setText("Enter Message: ");
-			messageField.setVisible(true);
-			frame.repaint();
+			messageField.setText("Enter Message:");
+			System.out.println("Tryng to open text box");
+			messageField.setBounds(frame.getWidth()/2-100, frame.getHeight()/2 -100, 200, 100);
+			messageField.setBounds(0, 0, 200, 200);
+			messageField.setBackground(new Color(240,240,240));
+			addMessageKeyListener();
+		}
+	}
+
+	private void addMessageKeyListener(){
+		if(messageField!=null){
+			messageField.addKeyListener(new KeyListener(){
+				@Override
+				public void keyTyped(KeyEvent e) {
+
+				}
+
+				@Override
+				public void keyPressed(KeyEvent e) {
+					System.out.println("Key pressed in message box");
+					if(KeyEvent.getKeyText(e.getKeyCode()).equals("Enter")){
+						doSendMessage();
+					}
+				}
+
+				@Override
+				public void keyReleased(KeyEvent e) {
+
+				}
+
+			});
 		}
 	}
 
