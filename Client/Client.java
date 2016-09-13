@@ -28,13 +28,14 @@ import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 public class Client {
 	private JPanel p;
 	private JFrame frame;
-	private JTextField messageField;
-	public JTextField console;
+	private JTextArea messageField;
+	public JTextArea console;
 	private boolean connected;
 	public double x;
 	public double y;
@@ -70,14 +71,17 @@ public class Client {
 		//Creates the jframe/
 		frame = new JFrame("Client");
 		frame.setVisible(true);
+		frame.setAutoRequestFocus(true);
 		//frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setSize(windowWidth, windowHeight);
 
 		this.p = new Panel(this);
-		console=new JTextField("Console:");
-		frame.add(console);
-		console.setBounds(900, 0, 100, frame.getHeight());
-		console.setBackground(new Color(240,240,240));
+		//Draws console
+//
+//		console=new JTextArea("Console:");
+//		frame.add(console);
+//		console.setBounds(900, 0, 100, frame.getHeight());
+//		console.setBackground(new Color(240,240,240));
 
 		//Sets the graphics so that we can draw things.
 		JButton button = new JButton("Press enter to join localhost.");
@@ -90,8 +94,7 @@ public class Client {
 
 			@Override
 			public void keyPressed(KeyEvent e) {
-				// TODO Auto-generated method stub
-				//System.out.println(e.getKeyChar());
+				System.out.println(e.getKeyChar());
 				if(connection==null){
 					status = "Connecting...";
 					advice = "Try browsing memes while you wait...";
@@ -100,13 +103,13 @@ public class Client {
 					connection.send(Character.toString(e.getKeyChar()));
 				}
 
-				String key = Character.toString(e.getKeyChar());	
-				
+				String key = Character.toString(e.getKeyChar());
+
 				if(key.equals("m")){
 					doDraftMessage();
 				}
-				
-				if(KeyEvent.getKeyText(e.getKeyCode()).equals("Space")){
+
+				if(KeyEvent.getKeyText(e.getKeyCode()).equals("Enter")){
 					doSendMessage();
 				}
 			}
@@ -128,18 +131,18 @@ public class Client {
 				//System.out.println(e.getActionCommand());
 			}
 		});
-		
+
 		//Adds listener for when game is closed to send exit message to server
 		//and to stop execution of client.
 		frame.addWindowListener(new WindowAdapter()
 		{
 		    public void windowClosing(WindowEvent e)
-		    {	
+		    {
 		    	exitGame();
 		    }
 		});
 	}
-	
+
 	//Exit protocol.
 	public void exitGame(){
 		if(connection!=null){
@@ -163,24 +166,50 @@ public class Client {
 			p.repaint();
 			startTime = System.nanoTime();
 	}
-	
+
 	public void doDraftMessage(){
 		if(messageField==null){
-			messageField = new JTextField(5);
+			messageField = new JTextArea();
 			frame.add(messageField);
 			messageField.setText("Enter Message:");
-			//System.out.println("Tryng to open text box");
-			messageField.setVisible(true);
+			System.out.println("Tryng to open text box");
 			messageField.setBounds(frame.getWidth()/2-100, frame.getHeight()/2 -100, 200, 100);
 			messageField.setBackground(new Color(240,240,240));
+			messageField.addKeyListener(new KeyListener(){
+
+				@Override
+				public void keyTyped(KeyEvent e) {
+
+				}
+
+				@Override
+				public void keyPressed(KeyEvent e) {
+					if(KeyEvent.getKeyText(e.getKeyCode()).equals("Enter")){
+						doSendMessage();
+					}
+				}
+
+				@Override
+				public void keyReleased(KeyEvent e) {
+
+				}
+
+			});
+			messageField.setVisible(true);
+		} else if(!messageField.isVisible()){
+			messageField.setVisible(true);
+			messageField.setText("Enter Message: ");
 		}
 	}
-	
+
 	public void doSendMessage(){
-		if(messageField!=null){
-			connection.send("message " + messageField.getText());
-			frame.remove(messageField);
-			messageField=null;
+		if(messageField!=null && messageField.isVisible()){
+
+			// UNTAB THIS FOR THE GAME TO WORK connection.send("message " + messageField.getText());
+			messageField.setVisible(false);
+			messageField.setFocusable(false);
+			frame.requestFocus();
+			System.out.println("THIS WORKS");
 		}
 	}
 

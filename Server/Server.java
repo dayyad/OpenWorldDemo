@@ -116,7 +116,7 @@ public class Server {
 			e.printStackTrace();
 		}
 	}
-	
+
 	//Sends string to all connected clients
 	public void sendAll(String string){
 		for(ServerConnection client : clients){
@@ -159,7 +159,7 @@ public class Server {
 			client.update();
 		}
 	}
-	
+
 	public void removeClient(int connectionId){
 		for(ServerConnection client : clients){
 			if(client.connectionId==connectionId){
