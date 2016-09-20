@@ -1,6 +1,7 @@
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
@@ -18,14 +19,15 @@ import javax.swing.JPanel;
 public class Server {
 	private ArrayList<ServerConnection> clients;
 	private DatagramSocket serverSocket;
+	public boolean uniDebugMode =true;
 
 	public int playerWidth = 30;
 	public int playerHeight = 30;
 	public int moveSpeed = 20;
 	private int mapWidth = 5;
 	private int mapHeight = 5;
-	public int chunckWidth=450;
-	public int chunckHeight=450;
+	public int chunckWidth=800;
+	public int chunckHeight=800;
 
 	private JFrame frame;
 	private JPanel panel;
@@ -33,6 +35,7 @@ public class Server {
 	public Chunck chunck;
 	public Chunck spawnChunck;
 	public ArrayList<Player> players;
+	private String serverIp = "130.195.6.35";
 
 	public Server(){
 		//Init UI
@@ -44,40 +47,40 @@ public class Server {
 
 		//TOGLE FOR UI ---------------------------------
 
-//		frame = new JFrame("Server");
-//		frame.setVisible(true);
-//		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//		frame.setSize(300, 300);
-//		panel = new JPanel();
-//		frame.add(panel);
-//		panel.requestFocus();
+	/*frame = new JFrame("Server");
+		frame.setVisible(true);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setSize(300, 300);
+		panel = new JPanel();
+		frame.add(panel);
+		panel.requestFocus();
 
 		//Listens for key pushes
 
-//		panel.addKeyListener(new KeyListener(){
-//			@Override
-//			public void keyPressed(KeyEvent e) {
-//				for(ServerConnection client : clients){
-//					client.send(Character.toString(e.getKeyChar()));
-//				}
-//			}
-//			@Override
-//			public void keyReleased(KeyEvent e) {
-//			}
-//			@Override
-//			public void keyTyped(KeyEvent e) {
-//			}
-//		});
+		panel.addKeyListener(new KeyListener(){
+			@Override
+			public void keyPressed(KeyEvent e) {
+				for(ServerConnection client : clients){
+					client.send(Character.toString(e.getKeyChar()));
+				}
+			}
+		@Override
+		public void keyReleased(KeyEvent e) {
+			}
+		@Override
+			public void keyTyped(KeyEvent e) {
+		}
+	});*/
 
 		//TOGLE FOR UI ---------------------------------
 
 		//Attempt to start serversocket
 
 		try {
-			serverSocket = new DatagramSocket(new InetSocketAddress(InetAddress.getByName("128.199.236.107"), 3322));
-			//System.out.println("Server started...");
+			serverSocket = new DatagramSocket(new InetSocketAddress(InetAddress.getByName(serverIp), 3322));
+			System.out.println("Server started...");
 			while(true){
-				byte[] receiveData = new byte[100];
+				byte[] receiveData = new byte[1000];
 				//System.out.println("Looped main server receive loop once.");
 				DatagramPacket receivePacket = new DatagramPacket(receiveData,receiveData.length);
 				serverSocket.receive(receivePacket);
@@ -88,29 +91,56 @@ public class Server {
 				boolean found = false;
 				for(ServerConnection client : clients){
 					//If client not connecting from existing address then add new client.
-					if(client.remoteAddress.equals(receivePacket.getAddress()) && client.remotePort == receivePacket.getPort()){
-						client.processLine(new String(receivePacket.getData()));
-						found=true;
+					if(uniDebugMode){
+						//Assumes server running on same machine at uni behind firewall.
+						if(client.remoteAddress.equals(client.remoteAddress.equals(serverIp) && client.remotePort == receivePacket.getPort())){
+							client.processLine(new String(receivePacket.getData()));
+							found=true;
+						}
+					} else {
+						if(client.remoteAddress.equals(receivePacket.getAddress()) && client.remotePort == receivePacket.getPort()){
+							client.processLine(new String(receivePacket.getData()));
+							found=true;
+						}
+					}
+
+
+				}
+
+				//Special add clinet case if at uni.
+				if(uniDebugMode && !found){
+						clients.add(new ServerConnection(this,InetAddress.getLocalHost(),receivePacket.getPort()));
+				} else {
+					if(!found){
+						clients.add(new ServerConnection(this,receivePacket.getAddress(),receivePacket.getPort()));
 					}
 				}
-				if(!found){
-					clients.add(new ServerConnection(this,receivePacket.getAddress(),receivePacket.getPort()));
-				}
-				//System.out.println("Server recieved a bit of data :)");
-
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
+	private void debug(String string){
+		System.out.println(string);
+	}
+
 	//Sends string to specified client
 	public void send(String string, ServerConnection connection){
+		debug("Trying to send: " + string);
 		try {
 			byte[] sendData = string.getBytes();
-			DatagramPacket sendPacket = new DatagramPacket(sendData,sendData.length,connection.remoteAddress,connection.remotePort);
+
+			DatagramPacket sendPacket;
+
+			//If in debug mode always send to self.
+			if(uniDebugMode){
+				sendPacket = new DatagramPacket(sendData, sendData.length, new InetSocketAddress(serverIp, connection.remotePort));
+			}else{
+				sendPacket = new DatagramPacket(sendData,sendData.length,connection.remoteAddress,connection.remotePort);
+			}
 			serverSocket.send(sendPacket);
-			//System.out.println("Sent : " + string + " to: " + connection.remoteAddress.getHostName() + ":" + connection.remotePort );
+			debug("Sent : " + string + " to: " + connection.remoteAddress.getHostName() + ":" + connection.remotePort );
 
 		} catch (IOException e) {
 			e.printStackTrace();

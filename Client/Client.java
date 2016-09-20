@@ -41,7 +41,7 @@ public class Client {
 	public double y;
 	public int toX;
 	public int toY;
-	private String serverIp = "128.199.236.107";
+	private String serverIp = "130.195.6.35";
 
 	private int windowWidth = 1000;
 	private int windowHeight =700;
@@ -98,9 +98,9 @@ public class Client {
 				if(connection==null){
 					status = "Connecting...";
 					advice = "Try browsing memes while you wait...";
-					//openConnection();
+					openConnection();
 				} else {
-					//connection.send(Character.toString(e.getKeyChar()));
+					connection.send(Character.toString(e.getKeyChar()));
 				}
 
 				String key = Character.toString(e.getKeyChar());
@@ -144,6 +144,10 @@ public class Client {
 		    	exitGame();
 		    }
 		});
+	}
+
+	public void debug(String string){
+		System.out.println(string);
 	}
 
 	//Exit protocol.
@@ -221,7 +225,8 @@ public class Client {
 
 	public void doSendMessage(){
 		if(messageField!=null){
-			// UNTAB THIS FOR THE GAME TO WORK connection.send("message " + messageField.getText());
+			if(connection!=null)
+				connection.send("message " + messageField.getText());
 			messageField.setVisible(false);
 			frame.remove(messageField);
 			frame.repaint();

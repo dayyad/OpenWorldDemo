@@ -47,10 +47,11 @@ public class ClientConnection {
 			try{
 				byte[] receiveData=new byte[100];
 				DatagramPacket receivePacket = new DatagramPacket(receiveData,receiveData.length);
-
 				while(socket!=null){
 					socket.receive(receivePacket);
-					processLine(new String((receivePacket.getData())));
+					if(connectionId!=0){
+						processLine(new String((receivePacket.getData())));
+					}
 				}
 
 			} catch(IOException e){
@@ -61,7 +62,7 @@ public class ClientConnection {
 
 	private void processLine(String line){
 		line = line.trim();
-		//System.out.println("Client received: " +line);
+		client.debug("received: " + line );
 		Scanner lineScanner = new Scanner(line);
 		while (lineScanner.hasNext()){
 			String nextPack = lineScanner.next();
@@ -115,12 +116,12 @@ public class ClientConnection {
 		lineScanner.close();
 		client.draw();
 	}
-	
+
 	@SuppressWarnings("deprecation")
 	public void close(){
-		
+
 		socket.close();
 		socket=null;//Gets the listener out of its loop.
 	}
-	
+
 }

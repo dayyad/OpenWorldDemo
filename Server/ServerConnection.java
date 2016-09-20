@@ -6,7 +6,7 @@ public class ServerConnection {
 	private Server server;
 	public InetSocketAddress socketAddress;
 	public final int connectionId;
-	private static int lastId=0;
+	private static int lastId=1;
 	public InetAddress remoteAddress;
 	public int remotePort;
 
@@ -43,9 +43,10 @@ public class ServerConnection {
 	//ServerListener
 
 	public void processLine(String line){
+		System.out.println("recieved message " + line);
 		line = line.trim();
 		Scanner lScanner = new Scanner(line);
-		
+
 		Player player = server.getPlayerById(connectionId);
 		if(player!=null){
 			if(line.equals("w")){
@@ -63,25 +64,20 @@ public class ServerConnection {
 			if(line.equals("exit")){
 				server.removeClient(connectionId);
 			}
-			
+
 			//TODO make this better and find the player name afterwards as well.
 			//POTENTIALLY creating another loop within this one...
 			if(line.contains("message")){
-				line = line.substring(6);
 				String message ="";
-				while(lScanner.hasNext()){
-					String next = lScanner.next();
-					message=message+" " + next;
-				}
-				server.sendAll("message " + message);
+				server.sendAll("message " + line.substring(6));
 			}
-			
+
 			checkTravel();
 		}
 
 		server.updateClients();
 		//System.out.println("Server recieved: " +line);
-		
+
 		lScanner.close();
 	}
 
